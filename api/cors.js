@@ -1,4 +1,3 @@
-// api/cors.js
 import Cors from 'cors';
 
 const cors = Cors({
