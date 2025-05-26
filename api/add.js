@@ -1,14 +1,13 @@
 import { Client } from "@notionhq/client";
 
 export default async function handler(req, res) {
-  
   res.setHeader("Access-Control-Allow-Origin", "https://tattoo-consent.vercel.app");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
 
-  
   if (req.method === "OPTIONS") {
-    return res.status(200).end();
+    return res.status(200).end(); // Respuesta al preflight
   }
 
   if (req.method !== "POST") {
@@ -38,9 +37,7 @@ export default async function handler(req, res) {
 
   try {
     await notion.pages.create({
-      parent: {
-        database_id: process.env.NOTION_DATABASE_ID,
-      },
+      parent: { database_id: process.env.NOTION_DATABASE_ID },
       properties: {
         Cliente: { title: [{ text: { content: Cliente } }] },
         "Email Cliente": { email: EmailCliente },
@@ -48,9 +45,7 @@ export default async function handler(req, res) {
         "Teléfono Emergencia": { rich_text: [{ text: { content: TelefonoEmergencia } }] },
         "Edad Cliente": { number: parseInt(EdadCliente) },
         "Menor de Edad": {
-          select: {
-            name: MenorEdad ? "Sí" : "No"
-          }
+          select: { name: MenorEdad ? "Sí" : "No" }
         },
         "Nombre Tutor": NombreTutor ? { rich_text: [{ text: { content: NombreTutor } }] } : undefined,
         "Email Tutor": EmailTutor ? { email: EmailTutor } : undefined,
@@ -71,10 +66,10 @@ export default async function handler(req, res) {
     res.status(500).json({ error: "Error al agregar a Notion" });
   }
 }
+
 export const config = {
   api: {
     bodyParser: true,
     externalResolver: true,
   },
 };
-
