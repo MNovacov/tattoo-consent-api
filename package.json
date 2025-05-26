@@ -1,0 +1,24 @@
+{
+  "name": "tattoo-consent-api",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "api/add.js",
+  "scripts": {
+    "start": "node api/add.js"
+  },
+  "dependencies": {
+    "@notionhq/client": "^2.3.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MNovacov/tattoo-consent-api.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MNovacov/tattoo-consent-api/issues"
+  },
+  "homepage": "https://github.com/MNovacov/tattoo-consent-api#readme",
+  "description": ""
+}
