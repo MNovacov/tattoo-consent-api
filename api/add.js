@@ -1,18 +1,12 @@
 import { Client } from "@notionhq/client";
+import cors, { runMiddleware } from "./cors";
 
 export default async function handler(req, res) {
-  res.setHeader("Access-Control-Allow-Origin", "https://tattoo-consent.vercel.app");
-  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-  res.setHeader("Access-Control-Allow-Credentials", "true");
+  // Ejecutar CORS antes de continuar
+  await runMiddleware(req, res, cors);
 
-  if (req.method === "OPTIONS") {
-    return res.status(200).end(); 
-  }
-
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Método no permitido" });
-  }
+  if (req.method === "OPTIONS") return res.status(200).end();
+  if (req.method !== "POST") return res.status(405).json({ error: "Método no permitido" });
 
   const notion = new Client({ auth: process.env.NOTION_TOKEN });
 
