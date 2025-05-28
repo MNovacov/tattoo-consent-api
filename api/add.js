@@ -41,12 +41,10 @@ export default async function handler(req, res) {
       properties: {
         Cliente: { title: [{ text: { content: Cliente } }] },
         "Email Cliente": { email: EmailCliente },
-        "Teléfono Cliente": { rich_text: [{ text: { content: TelefonoCliente } }] },
-        "Teléfono Emergencia": { rich_text: [{ text: { content: TelefonoEmergencia } }] },
+        "Teléfono Cliente": { phone_number: TelefonoCliente },
+        "Teléfono Emergencia": { phone_number: TelefonoEmergencia },
         "Edad Cliente": { number: parseInt(EdadCliente) },
-        "Menor de Edad": {
-          select: { name: MenorEdad ? "Sí" : "No" }
-        },
+        "Menor de Edad": { checkbox: MenorEdad },
         "Nombre Tutor": NombreTutor ? { rich_text: [{ text: { content: NombreTutor } }] } : undefined,
         "Email Tutor": EmailTutor ? { email: EmailTutor } : undefined,
         Tatuador: { rich_text: [{ text: { content: Tatuador } }] },
