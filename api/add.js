@@ -1,15 +1,10 @@
 import { Client } from "@notionhq/client";
-import cors, { runMiddleware } from "./cors";
 
 export default async function handler(req, res) {
 
   res.setHeader("Access-Control-Allow-Origin", "https://tattoo-consent.vercel.app");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-
-
-  await runMiddleware(req, res, cors);
-
 
   if (req.method === "OPTIONS") {
     return res.status(200).end();
