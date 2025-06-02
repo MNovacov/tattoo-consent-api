@@ -39,7 +39,7 @@ export default async function handler(req, res) {
     await notion.pages.create({
       parent: { database_id: process.env.NOTION_DATABASE_ID },
       properties: {
-        Cliente: { title: [{ text: { content: Cliente } }] },
+        Cliente: { title: [{ text: { content: Cliente || "Sin nombre" } }] },
         "Email Cliente": { email: EmailCliente },
         "Teléfono Cliente": { phone_number: TelefonoCliente },
         "Teléfono Emergencia": { phone_number: TelefonoEmergencia },
