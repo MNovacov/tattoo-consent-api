@@ -47,9 +47,9 @@ export default async function handler(req, res) {
         "Menor de Edad": { checkbox: MenorEdad },
         "Nombre Tutor": NombreTutor ? { rich_text: [{ text: { content: NombreTutor } }] } : undefined,
         "Email Tutor": EmailTutor ? { email: EmailTutor } : undefined,
-        Tatuador: [
-      { name: state?.artist?.name || "No especificado" }
-    ],
+        Tatuador: Tatuador && Tatuador.length > 0 ? Tatuador.map((tatuador) => ({
+          name: tatuador.name
+        })) : [], // Multi-select arreglado
         "Zona a Tatuar": ZonaTatuar ? { rich_text: [{ text: { content: ZonaTatuar } }] } : undefined,
         Sesiones: Sesiones ? { number: parseInt(Sesiones) } : undefined,
         Fecha: { date: { start: Fecha } },
