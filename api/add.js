@@ -1,7 +1,6 @@
 import { Client } from "@notionhq/client";
 
 export default async function handler(req, res) {
-
   res.setHeader("Access-Control-Allow-Origin", "https://tattoo-consent.vercel.app");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -32,19 +31,12 @@ export default async function handler(req, res) {
     Valor,
     Abono,
     Alergias,
-    "Firma Cliente": FirmaCliente
+    "Firma Cliente": FirmaCliente,
   } = req.body;
 
-  try {
-    await notion.pages.create({
-  parent: { database_id: process.env.NOTION_DATABASE_ID },
-  properties: {
+  const rawProperties = {
     Cliente: {
-      title: [
-        {
-          text: { content: Cliente || "Sin nombre" },
-        },
-      ],
+      title: [{ text: { content: Cliente || "Sin nombre" } }],
     },
     "Email Cliente": { email: EmailCliente },
     "Teléfono Cliente": { phone_number: TelefonoCliente },
@@ -69,8 +61,17 @@ export default async function handler(req, res) {
     Abono: Abono ? { number: parseInt(Abono) } : undefined,
     Alergias: { rich_text: [{ text: { content: Alergias } }] },
     "Firma Cliente": { url: FirmaCliente },
-  },
-});
+  };
+
+  const properties = Object.fromEntries(
+    Object.entries(rawProperties).filter(([, v]) => v !== undefined)
+  );
+
+  try {
+    await notion.pages.create({
+      parent: { database_id: process.env.NOTION_DATABASE_ID },
+      properties,
+    });
 
     res.status(200).json({ success: true });
   } catch (error) {
