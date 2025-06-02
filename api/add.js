@@ -37,28 +37,40 @@ export default async function handler(req, res) {
 
   try {
     await notion.pages.create({
-      parent: { database_id: process.env.NOTION_DATABASE_ID },
-      properties: {
-        Cliente: { title: [{ text: { content: Cliente || "Sin nombre" } }] },
-        "Email Cliente": { email: EmailCliente },
-        "Teléfono Cliente": { phone_number: TelefonoCliente },
-        "Teléfono Emergencia": { phone_number: TelefonoEmergencia },
-        "Edad Cliente": { number: parseInt(EdadCliente) },
-        "Menor de Edad": { checkbox: MenorEdad },
-        "Nombre Tutor": NombreTutor ? { rich_text: [{ text: { content: NombreTutor } }] } : undefined,
-        "Email Tutor": EmailTutor ? { email: EmailTutor } : undefined,
-        Tatuador: Tatuador && Tatuador.length > 0 ? Tatuador.map((tatuador) => ({
-          name: tatuador.name
-        })) : [], // Multi-select arreglado
-        "Zona a Tatuar": ZonaTatuar ? { rich_text: [{ text: { content: ZonaTatuar } }] } : undefined,
-        Sesiones: Sesiones ? { number: parseInt(Sesiones) } : undefined,
-        Fecha: { date: { start: Fecha } },
-        Valor: Valor ? { number: parseInt(Valor) } : undefined,
-        Abono: Abono ? { number: parseInt(Abono) } : undefined,
-        Alergias: { rich_text: [{ text: { content: Alergias } }] },
-        "Firma Cliente": { url: FirmaCliente }
-      },
-    });
+  parent: { database_id: process.env.NOTION_DATABASE_ID },
+  properties: {
+    Cliente: {
+      title: [
+        {
+          text: { content: Cliente || "Sin nombre" },
+        },
+      ],
+    },
+    "Email Cliente": { email: EmailCliente },
+    "Teléfono Cliente": { phone_number: TelefonoCliente },
+    "Teléfono Emergencia": { phone_number: TelefonoEmergencia },
+    "Edad Cliente": { number: parseInt(EdadCliente) },
+    "Menor de Edad": { checkbox: MenorEdad },
+    "Nombre Tutor": NombreTutor
+      ? { rich_text: [{ text: { content: NombreTutor } }] }
+      : undefined,
+    "Email Tutor": EmailTutor ? { email: EmailTutor } : undefined,
+    Tatuador: {
+      multi_select: Array.isArray(Tatuador)
+        ? Tatuador.map((nombre) => ({ name: nombre }))
+        : [{ name: Tatuador }],
+    },
+    "Zona a Tatuar": ZonaTatuar
+      ? { rich_text: [{ text: { content: ZonaTatuar } }] }
+      : undefined,
+    Sesiones: Sesiones ? { number: parseInt(Sesiones) } : undefined,
+    Fecha: { date: { start: Fecha } },
+    Valor: Valor ? { number: parseInt(Valor) } : undefined,
+    Abono: Abono ? { number: parseInt(Abono) } : undefined,
+    Alergias: { rich_text: [{ text: { content: Alergias } }] },
+    "Firma Cliente": { url: FirmaCliente },
+  },
+});
 
     res.status(200).json({ success: true });
   } catch (error) {
