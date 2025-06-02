@@ -47,7 +47,9 @@ export default async function handler(req, res) {
         "Menor de Edad": { checkbox: MenorEdad },
         "Nombre Tutor": NombreTutor ? { rich_text: [{ text: { content: NombreTutor } }] } : undefined,
         "Email Tutor": EmailTutor ? { email: EmailTutor } : undefined,
-        Tatuador: { rich_text: [{ text: { content: Tatuador } }] },
+        Tatuador: [
+      { name: state?.artist?.name || "No especificado" }
+    ],
         "Zona a Tatuar": ZonaTatuar ? { rich_text: [{ text: { content: ZonaTatuar } }] } : undefined,
         Sesiones: Sesiones ? { number: parseInt(Sesiones) } : undefined,
         Fecha: { date: { start: Fecha } },
