@@ -49,14 +49,10 @@ export default async function handler(req, res) {
     "Email Tutor": EmailTutor ? { email: EmailTutor } : undefined,
     Tatuador: {
   multi_select: Array.isArray(Tatuador)
-    ? Tatuador.map((nombre) =>
-        typeof nombre === "string" ? { name: nombre } : nombre
-      )
-    : [
-        typeof Tatuador === "string"
-          ? { name: Tatuador }
-          : Tatuador
-      ],
+    ? Tatuador.map(t => typeof t === 'string' ? { name: t } : t)
+    : typeof Tatuador === 'string'
+      ? [{ name: Tatuador }]
+      : [Tatuador].filter(Boolean),
 },
     "Zona a Tatuar": ZonaTatuar
       ? { rich_text: [{ text: { content: ZonaTatuar } }] }
