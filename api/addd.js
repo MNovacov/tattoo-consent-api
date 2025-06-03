@@ -29,6 +29,12 @@ export default async function handler(req, res) {
     Abono,
     "Firma Tutor": FirmaTutor,
     "Firma Tatuador": FirmaTatuador,
+    // NUEVOS CAMPOS
+    "Nombre Cliente": NombreCliente,
+    "Email Cliente": EmailCliente,
+    "Teléfono Cliente": TelefonoCliente,
+    "Teléfono Emergencia": TelefonoEmergencia,
+    Alergias,
   } = req.body;
 
   const calcularEdad = (fecha) => {
@@ -46,6 +52,18 @@ export default async function handler(req, res) {
   const EdadCliente = calcularEdad(FechaNacimiento);
 
   const rawProperties = {
+    "Nombre Cliente": NombreCliente
+      ? { rich_text: [{ text: { content: NombreCliente } }] }
+      : undefined,
+    "Email Cliente": EmailCliente ? { email: EmailCliente } : undefined,
+    "Teléfono Cliente": TelefonoCliente
+      ? { phone_number: TelefonoCliente }
+      : undefined,
+    "Teléfono Emergencia": TelefonoEmergencia
+      ? { phone_number: TelefonoEmergencia }
+      : undefined,
+    Alergias: Alergias ? { rich_text: [{ text: { content: Alergias } }] } : undefined,
+
     "Nombre Menor": {
       title: [{ text: { content: NombreMenor || "Sin nombre" } }],
     },
