@@ -16,12 +16,9 @@ export default async function handler(req, res) {
   const notion = new Client({ auth: process.env.NOTION_TOKEN });
 
   const {
-    Cliente,
-    "Email Cliente": EmailCliente,
-    "Teléfono Cliente": TelefonoCliente,
-    "Teléfono Emergencia": TelefonoEmergencia,
-    "Edad Cliente": EdadCliente,
-    "Menor de Edad": MenorEdad,
+    "Nombre Menor": NombreMenor,
+    "Fecha Nacimiento": FechaNacimiento,
+    "Email Menor": EmailMenor,
     "Nombre Tutor": NombreTutor,
     "Email Tutor": EmailTutor,
     Tatuador,
@@ -30,30 +27,44 @@ export default async function handler(req, res) {
     Fecha,
     Valor,
     Abono,
-    Alergias,
-    "Firma Cliente": FirmaCliente,
+    "Firma Tutor": FirmaTutor,
+    "Firma Tatuador": FirmaTatuador,
   } = req.body;
 
+  const calcularEdad = (fecha) => {
+    if (!fecha) return null;
+    const nacimiento = new Date(fecha);
+    const hoy = new Date();
+    let edad = hoy.getFullYear() - nacimiento.getFullYear();
+    const mes = hoy.getMonth() - nacimiento.getMonth();
+    if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate())) {
+      edad--;
+    }
+    return edad;
+  };
+
+  const EdadCliente = calcularEdad(FechaNacimiento);
+
   const rawProperties = {
-    Cliente: {
-      title: [{ text: { content: Cliente || "Sin nombre" } }],
+    "Nombre Menor": {
+      title: [{ text: { content: NombreMenor || "Sin nombre" } }],
     },
-    "Email Cliente": { email: EmailCliente },
-    "Teléfono Cliente": { phone_number: TelefonoCliente },
-    "Teléfono Emergencia": { phone_number: TelefonoEmergencia },
-    "Edad Cliente": { number: parseInt(EdadCliente) },
-    "Menor de Edad": { checkbox: MenorEdad },
-    "Nombre Tutor": NombreTutor
-      ? { rich_text: [{ text: { content: NombreTutor } }] }
+    "Fecha Nacimiento": FechaNacimiento
+      ? { date: { start: FechaNacimiento } }
       : undefined,
-    "Email Tutor": EmailTutor ? { email: EmailTutor } : undefined,
+    "Edad Cliente": EdadCliente !== null ? { number: EdadCliente } : undefined,
+    "Email Menor": EmailMenor ? { email: EmailMenor } : undefined,
+    "Nombre Tutor": {
+      rich_text: [{ text: { content: NombreTutor } }],
+    },
+    "Email Tutor": { email: EmailTutor },
     Tatuador: {
-  multi_select: Array.isArray(Tatuador)
-    ? Tatuador.map(t => typeof t === 'string' ? { name: t } : t)
-    : typeof Tatuador === 'string'
-      ? [{ name: Tatuador }]
-      : [Tatuador].filter(Boolean),
-},
+      multi_select: Array.isArray(Tatuador)
+        ? Tatuador.map(t => typeof t === 'string' ? { name: t } : t)
+        : typeof Tatuador === 'string'
+          ? [{ name: Tatuador }]
+          : [Tatuador].filter(Boolean),
+    },
     "Zona a Tatuar": ZonaTatuar
       ? { rich_text: [{ text: { content: ZonaTatuar } }] }
       : undefined,
@@ -61,8 +72,9 @@ export default async function handler(req, res) {
     Fecha: { date: { start: Fecha } },
     Valor: Valor ? { number: parseInt(Valor) } : undefined,
     Abono: Abono ? { number: parseInt(Abono) } : undefined,
-    Alergias: { rich_text: [{ text: { content: Alergias } }] },
-    "Firma Cliente": { url: FirmaCliente },
+    "Firma Tutor": { url: FirmaTutor },
+    "Firma Tatuador": { url: FirmaTatuador },
+    "Menor de Edad": { checkbox: true },
   };
 
   const properties = Object.fromEntries(
@@ -77,7 +89,7 @@ export default async function handler(req, res) {
 
     res.status(200).json({ success: true });
   } catch (error) {
-    console.error("Error al agregar a Notion:", error);
+    console.error("Error al agregar a Notion (menor):", error);
     res.status(500).json({ error: "Error al agregar a Notion" });
   }
 }
