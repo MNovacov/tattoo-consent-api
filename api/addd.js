@@ -90,9 +90,11 @@ export default async function handler(req, res) {
     Fecha: { date: { start: Fecha } },
     Valor: Valor ? { number: parseInt(Valor) } : undefined,
     Abono: Abono ? { number: parseInt(Abono) } : undefined,
-    Alergias: { rich_text: [{ text: { content: Alergias } }] },
     "Firma Cliente": { url: FirmaCliente },
+    "Firma Tatuador": { url: FirmaTatuador },
+    "Menor de Edad": { checkbox: true },
   };
+
   const properties = Object.fromEntries(
     Object.entries(rawProperties).filter(([, v]) => v !== undefined)
   );
