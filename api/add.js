@@ -25,7 +25,7 @@ export default async function handler(req, res) {
     "Nombre Tutor": NombreTutor,
     "Email Tutor": EmailTutor,
     Tatuador,
-    "Zona a Tatuar": ZonaTatuar, 
+    "Zona a Tatuar": ZonaTatuar,
     Sesiones,
     Fecha,
     Valor,
